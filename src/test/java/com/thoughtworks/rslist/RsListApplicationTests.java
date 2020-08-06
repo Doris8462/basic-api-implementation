@@ -2,7 +2,9 @@ package com.thoughtworks.rslist;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +20,7 @@ import java.awt.*;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,6 +33,8 @@ class RsListApplicationTests {
     MockMvc mockMvc;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    RsEventRepository rsEventRepository;
 
     @AfterEach
     void cleanup(){
@@ -65,5 +70,31 @@ class RsListApplicationTests {
 
         assertEquals(0, users.size());
     }
+    @Test
+    void shouldAddOneRsEventUserAlreadyExist() throws Exception{
+        UserEntity save=userRepository.save(UserEntity.builder().email("a@b.com").phone("19999999999")
+        .gender("female").age(19).userName("idolice").voteNum(10).build());
 
+        String userJson="{\"eventName\":\"猪肉涨价了\",\"keyword\":\"经济\",\"userId\":"+save.getId()+"}";
+        mockMvc.perform(post("/rs/add").content(userJson).contentType
+                (MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+        List<RsEventEntity> all=rsEventRepository.findAll();
+        assertNotNull(all);
+        assertEquals(1,all.size());
+        assertEquals("猪肉涨价了",all.get(0).getEventName());
+        assertEquals("经济",all.get(0).getKeyword());
+        assertEquals(save.getId(),all.get(0).getUserId());
+
+        String anotherUserJson="{\"eventName\":\"猪肉又涨价了\",\"keyword\":\"民生\",\"userId\":"+save.getId()+"}";
+        mockMvc.perform(post("/rs/add").content(anotherUserJson).contentType
+                (MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+        all=rsEventRepository.findAll();
+        assertNotNull(all);
+        assertEquals(2,all.size());
+        assertEquals("猪肉又涨价了",all.get(1).getEventName());
+        assertEquals("民生",all.get(1).getKeyword());
+        assertEquals(save.getId(),all.get(1).getUserId());
+        List<UserEntity> users = userRepository.findAll();
+        assertEquals(1,users.size());
+    }
 }

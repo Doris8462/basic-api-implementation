@@ -2,7 +2,10 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.exception.CommenError;
+import com.thoughtworks.rslist.repository.RsEventRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jmx.access.InvalidInvocationException;
@@ -17,14 +20,14 @@ import java.util.List;
 public class RsController {
   private final List<RsEvent> rsList = init();
 
+@Autowired
+RsEventRepository rsEventRepository;
   private List<RsEvent> init() {
     List<RsEvent> rsEvents = new ArrayList<>();
-    rsEvents.add(new RsEvent("第一条事件", "无分类",
-            new User("A",18,"male","A@qq.com","11234567890")));
-    rsEvents.add(new RsEvent("第二条事件", "无分类",
-            new User("B",28,"female","B@qq.com","11234567890")));
-    rsEvents.add(new RsEvent("第三条事件", "无分类",
-            new User("C",38,"male","C@qq.com","11234567890")));
+    rsEvents.add(new RsEvent("第一条事件", "无分类",0));
+    rsEvents.add(new RsEvent("第二条事件", "无分类",0));
+    rsEvents.add(new RsEvent("第三条事件", "无分类",0));
+
     return rsEvents;
   }
 
@@ -58,6 +61,14 @@ public class RsController {
     return ResponseEntity.created(null).build();
   }
 */
+  @PostMapping("/rs/add")
+  public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent){
+    RsEventEntity rsEventEntity= RsEventEntity.builder().userId(rsEvent.getUserId()).keyword(rsEvent.getKeyword()).
+            eventName(rsEvent.getEventName()).build();
+rsEventRepository.save(rsEventEntity);
+    return ResponseEntity.created(null).build();
+  }
+
   @PostMapping("/rs/update/{index}")
   ResponseEntity updateRsEvent(@PathVariable int index, @RequestBody @Valid RsEvent rsEvent) {
     if(rsEvent.getEventName()!=null) rsList.get(index - 1).setEventName(rsEvent.getEventName());
