@@ -2,7 +2,10 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.repository.RsEventRepository;
+import com.thoughtworks.rslist.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import java.awt.*;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,12 +30,19 @@ class UserControllerTest {
 
     @Autowired
     MockMvc mockMvc;
-/*
+    ObjectMapper objectMapper;
+    @Autowired
+    RsEventRepository rsEventRepository;
+    @Autowired
+    UserRepository userRepository;
+
     @BeforeEach
     void setup(){
-        UserController.users.clear();
+       objectMapper=new ObjectMapper();
+       rsEventRepository.deleteAll();
+       userRepository.deleteAll();
     }
-
+/*
 @Test
     void shouldRegisterUser() throws Exception {
         User user=new User("Alibaba",18,"male","a@b.com","11234567890");
@@ -100,6 +111,19 @@ class UserControllerTest {
         String userJson=objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user").content(userJson).contentType
                 (MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+    }
+    @Test
+    public void shouldDeleteUser() throws Exception {
+        UserEntity save=userRepository.save(UserEntity.builder().email("a@b.com").phone("19999999999")
+                .gender("female").age(19).userName("idolice").voteNum(10).build());
+        RsEventEntity rsEventEntity= RsEventEntity.builder().userId(save.getId()).keyword("keyword").
+                eventName("eventName").build();
+        rsEventRepository.save(rsEventEntity);
+
+        mockMvc.perform(delete("/user/delete/{id}",save.getId())).andExpect(status().isOk());
+        assertEquals(0,userRepository.findAll().size());
+        assertEquals(0,rsEventRepository.findAll().size());
+
     }
 }
 

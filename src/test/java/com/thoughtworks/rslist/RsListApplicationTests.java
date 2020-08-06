@@ -104,4 +104,5 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/add").content(userJson).contentType
                 (MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
     }
+
 }
