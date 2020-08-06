@@ -50,4 +50,20 @@ class RsListApplicationTests {
         assertEquals("Alibaba", users.get(0).getUserName());
     }
 
+    @Test
+    void shouldDeleteUser() throws Exception{
+        User user=new User("Alibaba",19,"male","a@b.com","11234567890");
+        ObjectMapper objectMapper=new ObjectMapper();
+        String userJson=objectMapper.writeValueAsString(user);
+        mockMvc.perform(post("/user").content(userJson).contentType
+                (MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+
+        mockMvc.perform(post("/user/delete/1"))
+                .andExpect(status().isOk());
+
+        List<UserEntity> users = userRepository.findAll();
+
+        assertEquals(0, users.size());
+    }
+
 }
