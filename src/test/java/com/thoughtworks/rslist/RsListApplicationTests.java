@@ -97,4 +97,11 @@ class RsListApplicationTests {
         List<UserEntity> users = userRepository.findAll();
         assertEquals(1,users.size());
     }
+
+    @Test
+    void shouldAddOneRsEventUserNotExist() throws Exception{
+        String userJson="{\"eventName\":\"猪肉涨价了\",\"keyword\":\"经济\",\"userId\":100}";
+        mockMvc.perform(post("/rs/add").content(userJson).contentType
+                (MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+    }
 }

@@ -5,6 +5,7 @@ import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.exception.CommenError;
 import com.thoughtworks.rslist.repository.RsEventRepository;
+import com.thoughtworks.rslist.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,8 @@ public class RsController {
 
 @Autowired
 RsEventRepository rsEventRepository;
+@Autowired
+UserRepository userRepository;
   private List<RsEvent> init() {
     List<RsEvent> rsEvents = new ArrayList<>();
     rsEvents.add(new RsEvent("第一条事件", "无分类",0));
@@ -63,6 +66,9 @@ RsEventRepository rsEventRepository;
 */
   @PostMapping("/rs/add")
   public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent){
+    if(!userRepository.findById(rsEvent.getUserId()).isPresent()){
+      return ResponseEntity.badRequest().build();
+    }
     RsEventEntity rsEventEntity= RsEventEntity.builder().userId(rsEvent.getUserId()).keyword(rsEvent.getKeyword()).
             eventName(rsEvent.getEventName()).build();
 rsEventRepository.save(rsEventEntity);
