@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.entity.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.is;
 
 import java.awt.*;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,11 +26,12 @@ class UserControllerTest {
 
     @Autowired
     MockMvc mockMvc;
-
+/*
     @BeforeEach
     void setup(){
         UserController.users.clear();
     }
+
 @Test
     void shouldRegisterUser() throws Exception {
         User user=new User("Alibaba",18,"male","a@b.com","11234567890");
@@ -38,6 +41,8 @@ class UserControllerTest {
                 (MediaType.APPLICATION_JSON)).andExpect(status().isOk());
         assertEquals(1,UserController.users.size());
     }
+
+ */
 
     @Test
     void nameShouldNotLongerThan8()throws Exception {

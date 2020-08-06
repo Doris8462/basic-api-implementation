@@ -45,7 +45,7 @@ public class RsController {
     }
     return ResponseEntity.ok(rsList.subList(start - 1, end));
   }
-
+/*
   @PostMapping("/rs/add")
   public ResponseEntity addRsEvent(@RequestBody RsEvent rsEvent) {
     rsList.add(rsEvent);
@@ -57,7 +57,7 @@ public class RsController {
     UserController.users.add(rsEvent.getUser());
     return ResponseEntity.created(null).build();
   }
-
+*/
   @PostMapping("/rs/update/{index}")
   ResponseEntity updateRsEvent(@PathVariable int index, @RequestBody @Valid RsEvent rsEvent) {
     if(rsEvent.getEventName()!=null) rsList.get(index - 1).setEventName(rsEvent.getEventName());
