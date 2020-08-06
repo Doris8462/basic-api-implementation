@@ -119,6 +119,8 @@ class UserControllerTest {
         RsEventEntity rsEventEntity= RsEventEntity.builder().userId(save.getId()).keyword("keyword").
                 eventName("eventName").build();
         rsEventRepository.save(rsEventEntity);
+        assertEquals(1,userRepository.findAll().size());
+        assertEquals(1,rsEventRepository.findAll().size());
 
         mockMvc.perform(delete("/user/delete/{id}",save.getId())).andExpect(status().isOk());
         assertEquals(0,userRepository.findAll().size());

@@ -51,19 +51,7 @@ UserRepository userRepository;
     }
     return ResponseEntity.ok(rsList.subList(start - 1, end));
   }
-/*
-  @PostMapping("/rs/add")
-  public ResponseEntity addRsEvent(@RequestBody RsEvent rsEvent) {
-    rsList.add(rsEvent);
-    for(User user:UserController.users){
-      if(rsEvent.getUser().getUserName().equals(user.getUserName())){
-        return ResponseEntity.created(null).build();
-      }
-    }
-    UserController.users.add(rsEvent.getUser());
-    return ResponseEntity.created(null).build();
-  }
-*/
+
   @PostMapping("/rs/add")
   public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent){
     if(!userRepository.findById(rsEvent.getUserId()).isPresent()){
