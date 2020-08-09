@@ -63,14 +63,14 @@ rsEventRepository.save(rsEventEntity);
     return ResponseEntity.created(null).build();
   }
 
-  @PostMapping("/rs/update/{index}")
+  @PostMapping("/rs/{index}/update")
   ResponseEntity updateRsEvent(@PathVariable int index, @RequestBody @Valid RsEvent rsEvent) {
     if(rsEvent.getEventName()!=null) rsList.get(index - 1).setEventName(rsEvent.getEventName());
     if (rsEvent.getKeyword() != null) rsList.get(index - 1).setKeyword(rsEvent.getKeyword());
     return ResponseEntity.created(null).body(index);
   }
 
-  @PostMapping("/rs/delete/{index}")
+  @PostMapping("/rs/{index}/delete")
   ResponseEntity deleteRsEvent(@PathVariable int index) {
     rsList.remove(index - 1);
     return ResponseEntity.created(null).body(index);

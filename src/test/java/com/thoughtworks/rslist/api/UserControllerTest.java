@@ -122,7 +122,7 @@ class UserControllerTest {
         assertEquals(1,userRepository.findAll().size());
         assertEquals(1,rsEventRepository.findAll().size());
 
-        mockMvc.perform(delete("/user/delete/{id}",save.getId())).andExpect(status().isOk());
+        mockMvc.perform(delete("/user/{id}/delete",save.getId())).andExpect(status().isOk());
         assertEquals(0,userRepository.findAll().size());
         assertEquals(0,rsEventRepository.findAll().size());
 

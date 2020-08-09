@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public void register(@RequestBody @Valid User user){
+    public ResponseEntity register(@RequestBody @Valid User user){
         UserEntity entity =UserEntity.builder()
                 .userName(user.getUserName())
                 .age(user.getAge())
@@ -32,9 +32,10 @@ public class UserController {
                 .voteNum(user.getVote())
                 .build();
         userRepository.save(entity);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/user/delete/{index}")
+    @DeleteMapping("/user/{index}/delete")
     @Transactional
     public ResponseEntity deleteUser(@PathVariable int index) {
         userRepository.deleteById(index);

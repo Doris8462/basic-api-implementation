@@ -108,7 +108,7 @@ class RsControllerTest {
     @Test
     void shouldUpdateRsEventGivenIndex() throws Exception {
         String requestJsonAll = "{\"eventName\":\"要修改的事件\",\"keyword\":\"要修改的分类\"}";
-        mockMvc.perform(post("/rs/update/1")
+        mockMvc.perform(post("/rs/1/update")
                 .content(requestJsonAll)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
@@ -120,7 +120,7 @@ class RsControllerTest {
 
     @Test
     void shouldDeleteRsEventGivenIndex() throws Exception {
-        mockMvc.perform(post("/rs/delete/1"))
+        mockMvc.perform(post("/rs/1/delete"))
                 .andExpect(status().isCreated());
 
         mockMvc.perform(get("/rs/list"))
