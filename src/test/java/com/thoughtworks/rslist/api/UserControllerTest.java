@@ -42,18 +42,14 @@ class UserControllerTest {
        rsEventRepository.deleteAll();
        userRepository.deleteAll();
     }
-/*
-@Test
-    void shouldRegisterUser() throws Exception {
-        User user=new User("Alibaba",18,"male","a@b.com","11234567890");
-        ObjectMapper objectMapper=new ObjectMapper();
-        String userJson=objectMapper.writeValueAsString(user);
-        mockMvc.perform(post("/user").content(userJson).contentType
-                (MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-        assertEquals(1,UserController.users.size());
-    }
 
- */
+    @Test
+    public void shouldRegisterUser() throws Exception {
+        User user=new User("Alibaba",18,"male","a@b.com","11234567890");
+        String request = objectMapper.writeValueAsString(user);
+        mockMvc.perform(post("/user").contentType(MediaType.APPLICATION_JSON).content(request))
+                .andExpect(status().isOk());
+    }
 
     @Test
     void nameShouldNotLongerThan8()throws Exception {
@@ -61,7 +57,8 @@ class UserControllerTest {
         ObjectMapper objectMapper=new ObjectMapper();
         String userJson=objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user").content(userJson).contentType
-                (MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+                (MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid param")));
     }
     @Test
     void nameShouldNotNull()throws Exception {
@@ -78,7 +75,8 @@ class UserControllerTest {
         ObjectMapper objectMapper=new ObjectMapper();
         String userJson=objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user").content(userJson).contentType
-                (MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+                (MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid param")));
     }
     @Test
     void ageShouldNotLessThan18()throws Exception {
@@ -86,7 +84,8 @@ class UserControllerTest {
         ObjectMapper objectMapper=new ObjectMapper();
         String userJson=objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user").content(userJson).contentType
-                (MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+                (MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid param")));
     }
     @Test
     void ageShouldNotMoreThan100()throws Exception {
@@ -94,7 +93,8 @@ class UserControllerTest {
         ObjectMapper objectMapper=new ObjectMapper();
         String userJson=objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user").content(userJson).contentType
-                (MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+                (MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid param")));
     }
     @Test
     void emailShouldValid()throws Exception {
@@ -102,7 +102,8 @@ class UserControllerTest {
         ObjectMapper objectMapper=new ObjectMapper();
         String userJson=objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user").content(userJson).contentType
-                (MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+                (MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid param")));
     }
     @Test
     void phoneSHouleValid()throws Exception {
@@ -110,7 +111,8 @@ class UserControllerTest {
         ObjectMapper objectMapper=new ObjectMapper();
         String userJson=objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user").content(userJson).contentType
-                (MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+                (MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid param")));
     }
     @Test
     public void shouldDeleteUser() throws Exception {

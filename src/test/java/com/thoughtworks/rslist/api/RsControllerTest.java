@@ -93,17 +93,20 @@ class RsControllerTest {
                 //.andExpect(jsonPath("$[2].user.phone",is("11234567890")))
                 .andExpect(status().isOk());
     }
-        /*
+
     @Test
     void shouldReturnExceptionWhenAddOndRsEventWithInvalidUser() throws Exception {
-        String requestJson=  "{\"eventName\":\"添加一条热搜\"," + " \"keyword\":\"娱乐\"," +"\"user\" :{\"name\":\"xiaowang\",  \"age\":10,\"gender\":\"female\", \"email\":\"a@thoughtworks.com\", \"phone\":\"18888888888\"}}";
-        mockMvc.perform(post("/rs/add")
-                .content(requestJson)
+        User user = new User("xiaowang", 10, "female", "a@thoughtworks.com", "18888888888");
+        //RsEvent rsEvent = new RsEvent(null, "娱乐", user);
+        RsEvent rsEvent = new RsEvent(null, "娱乐", 1);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userJson = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs/add").content(userJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.error",is("invalid param")));
     }
-         */
 
     @Test
     void shouldUpdateRsEventGivenIndex() throws Exception {
@@ -139,14 +142,15 @@ class RsControllerTest {
 
         mockMvc.perform(post("/rs/add").content(userJson)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid param")));
     }
-/*
+
     @Test
-    void shouldReturnBadRerequestWhenIndexOutOfBound() throws Exception {
+    void shouldReturnBadRequestWhenIndexOutOfBound() throws Exception {
         mockMvc.perform(get("/rs/list/10"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", is("invalid index")));
     }
- */
+
 }

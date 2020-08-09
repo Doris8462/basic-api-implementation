@@ -4,6 +4,7 @@ import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.exception.CommenError;
+import com.thoughtworks.rslist.exception.InvalidIndexException;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,9 @@ UserRepository userRepository;
   }
 
   @GetMapping("/rs/list/{index}")
-  public ResponseEntity getOneRsEvent(@PathVariable int index) {
-    if(index>rsList.size()){
-
-      throw new InvalidInvocationException("invalid index");
+  public ResponseEntity getOneRsEvent(@PathVariable int index) throws InvalidIndexException {
+    if(index < 1 || index > rsList.size()){
+      throw new InvalidIndexException("invalid index");
     }
     return ResponseEntity.ok(rsList.get(index - 1));
   }
@@ -74,6 +74,19 @@ rsEventRepository.save(rsEventEntity);
   ResponseEntity deleteRsEvent(@PathVariable int index) {
     rsList.remove(index - 1);
     return ResponseEntity.created(null).body(index);
+  }
+
+  @ExceptionHandler({InvalidIndexException.class, MethodArgumentNotValidException.class})
+  public ResponseEntity exceptionHandler(Exception ex){
+    String errorMessage;
+    CommenError commError =new CommenError();
+    if(ex instanceof MethodArgumentNotValidException){
+      errorMessage="invalid param";
+    }else {
+      errorMessage=ex.getMessage();
+    }
+    commError.setError(errorMessage);
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(commError);
   }
 
 }
