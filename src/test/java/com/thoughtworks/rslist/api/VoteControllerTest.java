@@ -149,4 +149,50 @@ class VoteControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(4)));
     }
+
+    @Test
+    void shouldVoteGivenNumber(){
+        UserEntity user = UserEntity.builder()
+                .userName("user 0")
+                .gender("male")
+                .age(20)
+                .email("12@34.com")
+                .phone("13579246810")
+                .voteNum(3)
+                .build();
+        user = userRepository.save(user);
+        RsEventEntity event = RsEventEntity.builder()
+                .eventName("event 0")
+                .keyword("key")
+                .userId(user.getId())
+                .build();
+        event = rsEventRepository.save(event);
+        VoteEntity vote0 = VoteEntity.builder()
+                .localDateTime(LocalDateTime.now())
+                .num(0)
+                .user(user)
+                .rsEvent(event)
+                .build();
+        voteRepository.save(vote0);
+
+        VoteEntity vote1 = VoteEntity.builder()
+                .localDateTime(LocalDateTime.now())
+                .num(1)
+                .user(user)
+                .rsEvent(event)
+                .build();
+        voteRepository.save(vote1);
+
+        VoteEntity vote2 = VoteEntity.builder()
+                .localDateTime(LocalDateTime.now())
+                .num(2)
+                .user(user)
+                .rsEvent(event)
+                .build();
+        voteRepository.save(vote2);
+
+        List<VoteEntity> votes= voteRepository.findAllByAaa(0);
+
+        assertEquals(1, votes.size());
+    }
 }
